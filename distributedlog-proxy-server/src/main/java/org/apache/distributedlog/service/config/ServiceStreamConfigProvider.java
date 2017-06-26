@@ -18,15 +18,16 @@
 package org.apache.distributedlog.service.config;
 
 import com.google.common.base.Optional;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.distributedlog.config.DynamicConfigurationFactory;
 import org.apache.distributedlog.config.DynamicDistributedLogConfiguration;
 import org.apache.distributedlog.service.streamset.StreamPartitionConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import org.apache.commons.configuration.ConfigurationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Provide per stream configuration to DistributedLog service layer.

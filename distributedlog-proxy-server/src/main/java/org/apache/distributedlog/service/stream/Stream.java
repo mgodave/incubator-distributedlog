@@ -17,9 +17,10 @@
  */
 package org.apache.distributedlog.service.stream;
 
+import com.twitter.util.Future;
 import org.apache.distributedlog.config.DynamicDistributedLogConfiguration;
 import org.apache.distributedlog.service.streamset.Partition;
-import com.twitter.util.Future;
+
 import java.io.IOException;
 
 /**

@@ -17,32 +17,26 @@
  */
 package org.apache.distributedlog.service;
 
-import static com.google.common.base.Charsets.UTF_8;
-import static org.apache.distributedlog.LogRecord.MAX_LOGRECORD_SIZE;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import com.google.common.base.Optional;
+import com.twitter.finagle.builder.ClientBuilder;
+import com.twitter.finagle.thrift.ClientId$;
+import com.twitter.util.Await;
+import com.twitter.util.Duration;
+import com.twitter.util.Future;
+import com.twitter.util.Futures;
+import org.apache.distributedlog.*;
+import org.apache.distributedlog.acl.AccessControlManager;
 import org.apache.distributedlog.api.AsyncLogReader;
-import org.apache.distributedlog.DLMTestUtil;
-import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.api.DistributedLogManager;
 import org.apache.distributedlog.api.LogReader;
-import org.apache.distributedlog.LogRecord;
-import org.apache.distributedlog.LogRecordWithDLSN;
-import org.apache.distributedlog.TestZooKeeperClientBuilder;
-import org.apache.distributedlog.ZooKeeperClient;
-import org.apache.distributedlog.acl.AccessControlManager;
-import org.apache.distributedlog.common.annotations.DistributedLogAnnotations;
+import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.client.routing.LocalRoutingService;
+import org.apache.distributedlog.common.annotations.DistributedLogAnnotations;
+import org.apache.distributedlog.common.concurrent.FutureUtils;
 import org.apache.distributedlog.exceptions.DLException;
 import org.apache.distributedlog.exceptions.LogNotFoundException;
 import org.apache.distributedlog.impl.acl.ZKAccessControl;
 import org.apache.distributedlog.impl.metadata.BKDLConfig;
-import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.service.stream.StreamManagerImpl;
 import org.apache.distributedlog.thrift.AccessControlEntry;
 import org.apache.distributedlog.thrift.service.BulkWriteResponse;
@@ -50,27 +44,20 @@ import org.apache.distributedlog.thrift.service.HeartbeatOptions;
 import org.apache.distributedlog.thrift.service.StatusCode;
 import org.apache.distributedlog.thrift.service.WriteContext;
 import org.apache.distributedlog.util.FailpointUtils;
-import org.apache.distributedlog.common.concurrent.FutureUtils;
-import com.twitter.finagle.builder.ClientBuilder;
-import com.twitter.finagle.thrift.ClientId$;
-import com.twitter.util.Await;
-import com.twitter.util.Duration;
-import com.twitter.util.Future;
-import com.twitter.util.Futures;
-import java.net.SocketAddress;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.SocketAddress;
+import java.nio.ByteBuffer;
+import java.util.*;
+
+import static com.google.common.base.Charsets.UTF_8;
+import static org.apache.distributedlog.LogRecord.MAX_LOGRECORD_SIZE;
+import static org.junit.Assert.*;
 
 /**
  * Test Case for {@link DistributedLogServer}.
@@ -137,7 +124,7 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
             .handshakeWithClientInfo(true)
             .clientBuilder(ClientBuilder.get()
                 .hostConnectionLimit(1)
-                .connectionTimeout(Duration.fromSeconds(1))
+                .tcpConnectTimeout(Duration.fromSeconds(1))
                 .requestTimeout(Duration.fromSeconds(60)))
             .checksum(false);
         DistributedLogClient dlClient = dlClientBuilder.build();
@@ -368,11 +355,11 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
 
         for (long i = 1; i <= 10; i++) {
             logger.debug("Send heartbeat {} to stream {}.", i, name);
-            dlClient.dlClient.check(name).get();
+            Await.result(dlClient.dlClient.check(name));
         }
 
         logger.debug("Write entry one to stream {}.", name);
-        dlClient.dlClient.write(name, ByteBuffer.wrap("1".getBytes())).get();
+        Await.result(dlClient.dlClient.write(name, ByteBuffer.wrap("1".getBytes())));
 
         Thread.sleep(1000);
 
@@ -403,7 +390,7 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
 
         for (long i = 1; i <= 10; i++) {
             logger.debug("Write entry {} to stream {}.", i, name);
-            dlClient.dlClient.write(name, ByteBuffer.wrap(("" + i).getBytes())).get();
+            Await.result(dlClient.dlClient.write(name, ByteBuffer.wrap(("" + i).getBytes())));
         }
 
         Thread.sleep(1000);
@@ -414,7 +401,7 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
 
         for (long i = 11; i <= 20; i++) {
             logger.debug("Write entry {} to stream {}.", i, name);
-            dlClient.dlClient.write(name, ByteBuffer.wrap(("" + i).getBytes())).get();
+            Await.result(dlClient.dlClient.write(name, ByteBuffer.wrap(("" + i).getBytes())));
         }
 
         DistributedLogManager dlm = DLMTestUtil.createNewDLM(name, conf, getUri());
@@ -442,13 +429,13 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
         for (long i = 1; i <= 10; i++) {
             long curTxId = txid++;
             logger.debug("Write entry {} to stream {}.", curTxId, name);
-            dlClient.dlClient.write(name,
-                    ByteBuffer.wrap(("" + curTxId).getBytes())).get();
+            Await.result(dlClient.dlClient.write(name,
+                    ByteBuffer.wrap(("" + curTxId).getBytes())));
         }
 
         checkStream(1, 1, 1, name, dlServer.getAddress(), true, true);
 
-        dlClient.dlClient.delete(name).get();
+        Await.result(dlClient.dlClient.delete(name));
 
         checkStream(0, 0, 0, name, dlServer.getAddress(), false, false);
 
@@ -469,8 +456,8 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
         for (long i = 1; i <= 10; i++) {
             long curTxId = txid++;
             logger.debug("Write entry {} to stream {}.", curTxId, name);
-            DLSN dlsn = dlClient.dlClient.write(name,
-                    ByteBuffer.wrap(("" + curTxId).getBytes())).get();
+            DLSN dlsn = Await.result(dlClient.dlClient.write(name,
+                    ByteBuffer.wrap(("" + curTxId).getBytes())));
         }
         Thread.sleep(1000);
 
@@ -498,14 +485,14 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
 
             noAdHocClient.routingService.addHost("dlserver-create-stream", noAdHocServer.getAddress());
             assertFalse(noAdHocServer.dlServer.getKey().getStreamManager().isAcquired(name));
-            assertTrue(Await.ready(noAdHocClient.dlClient.create(name)).isReturn());
+            assertTrue(Await.result(noAdHocClient.dlClient.create(name).liftToTry()).isReturn());
 
             long txid = 101;
             for (long i = 1; i <= 10; i++) {
                 long curTxId = txid++;
                 logger.debug("Write entry {} to stream {}.", curTxId, name);
-                noAdHocClient.dlClient.write(name,
-                    ByteBuffer.wrap(("" + curTxId).getBytes())).get();
+                Await.result(noAdHocClient.dlClient.write(name,
+                    ByteBuffer.wrap(("" + curTxId).getBytes())));
             }
 
             assertTrue(noAdHocServer.dlServer.getKey().getStreamManager().isAcquired(name));
@@ -525,20 +512,20 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
 
             noAdHocClient.routingService.addHost("dlserver-create-stream-twice", noAdHocServer.getAddress());
             assertFalse(noAdHocServer.dlServer.getKey().getStreamManager().isAcquired(name));
-            assertTrue(Await.ready(noAdHocClient.dlClient.create(name)).isReturn());
+            assertTrue(Await.result(noAdHocClient.dlClient.create(name).liftToTry()).isReturn());
 
             long txid = 101;
             for (long i = 1; i <= 10; i++) {
                 long curTxId = txid++;
                 logger.debug("Write entry {} to stream {}.", curTxId, name);
-                noAdHocClient.dlClient.write(name,
-                    ByteBuffer.wrap(("" + curTxId).getBytes())).get();
+                Await.result(noAdHocClient.dlClient.write(name,
+                    ByteBuffer.wrap(("" + curTxId).getBytes())));
             }
 
             assertTrue(noAdHocServer.dlServer.getKey().getStreamManager().isAcquired(name));
 
             // create again
-            assertTrue(Await.ready(noAdHocClient.dlClient.create(name)).isReturn());
+            assertTrue(Await.result(noAdHocClient.dlClient.create(name).liftToTry()).isReturn());
             assertTrue(noAdHocServer.dlServer.getKey().getStreamManager().isAcquired(name));
         } finally {
             tearDownNoAdHocCluster();
@@ -559,17 +546,17 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
             for (long i = 1; i <= 10; i++) {
                 long curTxId = txid++;
                 logger.debug("Write entry {} to stream {}.", curTxId, name);
-                DLSN dlsn = dlClient.dlClient.write(name,
-                        ByteBuffer.wrap(("" + curTxId).getBytes())).get();
+                DLSN dlsn = Await.result(dlClient.dlClient.write(name,
+                        ByteBuffer.wrap(("" + curTxId).getBytes())));
                 txid2DLSN.put(curTxId, dlsn);
             }
             if (s == 1) {
-                dlClient.dlClient.release(name).get();
+                Await.result(dlClient.dlClient.release(name));
             }
         }
 
         DLSN dlsnToDelete = txid2DLSN.get(11L);
-        dlClient.dlClient.truncate(name, dlsnToDelete).get();
+        Await.result(dlClient.dlClient.truncate(name, dlsnToDelete));
 
         DistributedLogManager readDLM = DLMTestUtil.createNewDLM(name, conf, getUri());
         LogReader reader = readDLM.getInputStream(1);
@@ -613,7 +600,7 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
         }
 
         try {
-            Await.result(dlClient.dlClient.write(name, ByteBuffer.wrap("1".getBytes(UTF_8))));
+            Await.result(dlClient.dlClient.write(name, ByteBuffer.wrap("1".getBytes(UTF_8))).liftToTry());
             fail("Should fail with request denied exception");
         } catch (DLException dle) {
             assertEquals(StatusCode.REQUEST_DENIED.getValue(), dle.getCode());
@@ -654,7 +641,7 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
         for (String streamName : streams) {
             dlClient.routingService.addHost(streamName, dlServer.getAddress());
             Await.result(dlClient.dlClient.write(streamName,
-                    ByteBuffer.wrap(streamName.getBytes(UTF_8))));
+                    ByteBuffer.wrap(streamName.getBytes(UTF_8))).liftToTry());
         }
 
         DLClient client = createDistributedLogClient(
@@ -685,11 +672,11 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
 
         dlClient.routingService.addHost(name, dlServer.getAddress());
 
-        Await.result(dlClient.dlClient.write(name, ByteBuffer.wrap("1".getBytes(UTF_8))));
+        Await.result(dlClient.dlClient.write(name, ByteBuffer.wrap("1".getBytes(UTF_8))).liftToTry());
         checkStream(1, 1, 1, name, dlServer.getAddress(), true, true);
 
         // release the stream
-        Await.result(dlClient.dlClient.release(name));
+        Await.result(dlClient.dlClient.release(name).liftToTry());
         checkStream(0, 0, 0, name, dlServer.getAddress(), false, false);
     }
 

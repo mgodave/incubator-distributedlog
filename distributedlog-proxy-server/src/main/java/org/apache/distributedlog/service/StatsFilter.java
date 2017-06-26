@@ -21,10 +21,11 @@ import com.google.common.base.Stopwatch;
 import com.twitter.finagle.Service;
 import com.twitter.finagle.SimpleFilter;
 import com.twitter.util.Future;
-import java.util.concurrent.TimeUnit;
 import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.OpStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Track distributedlog server finagle-service stats.

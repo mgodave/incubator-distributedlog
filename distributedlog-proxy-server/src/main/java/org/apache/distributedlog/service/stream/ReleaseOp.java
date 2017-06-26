@@ -17,17 +17,17 @@
  */
 package org.apache.distributedlog.service.stream;
 
-import org.apache.distributedlog.api.AsyncLogWriter;
-import org.apache.distributedlog.acl.AccessControlManager;
-import org.apache.distributedlog.exceptions.DLException;
-import org.apache.distributedlog.exceptions.RequestDeniedException;
-import org.apache.distributedlog.service.ResponseUtils;
-import org.apache.distributedlog.thrift.service.WriteResponse;
-import org.apache.distributedlog.common.util.Sequencer;
 import com.twitter.util.Future;
 import org.apache.bookkeeper.feature.Feature;
 import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.StatsLogger;
+import org.apache.distributedlog.acl.AccessControlManager;
+import org.apache.distributedlog.api.AsyncLogWriter;
+import org.apache.distributedlog.common.util.Sequencer;
+import org.apache.distributedlog.exceptions.DLException;
+import org.apache.distributedlog.exceptions.RequestDeniedException;
+import org.apache.distributedlog.service.ResponseUtils;
+import org.apache.distributedlog.thrift.service.WriteResponse;
 import scala.runtime.AbstractFunction1;
 
 /**

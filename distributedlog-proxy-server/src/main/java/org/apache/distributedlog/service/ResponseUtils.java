@@ -17,13 +17,14 @@
  */
 package org.apache.distributedlog.service;
 
-import java.util.concurrent.CompletionException;
 import org.apache.distributedlog.exceptions.DLException;
 import org.apache.distributedlog.exceptions.OwnershipAcquireFailedException;
 import org.apache.distributedlog.thrift.service.BulkWriteResponse;
 import org.apache.distributedlog.thrift.service.ResponseHeader;
 import org.apache.distributedlog.thrift.service.StatusCode;
 import org.apache.distributedlog.thrift.service.WriteResponse;
+
+import java.util.concurrent.CompletionException;
 
 /**
  * Utility methods for building write proxy service responses.

@@ -49,7 +49,7 @@
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>finagle-ostrich4_2.11</artifactId>
-      <version>${finagle.version}</version>
+      <version>6.44.0</version>
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>

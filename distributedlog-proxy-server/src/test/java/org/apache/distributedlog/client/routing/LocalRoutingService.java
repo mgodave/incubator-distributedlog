@@ -20,6 +20,7 @@ package org.apache.distributedlog.client.routing;
 import com.google.common.collect.Sets;
 import com.twitter.finagle.NoBrokersAvailableException;
 import com.twitter.finagle.stats.StatsReceiver;
+
 import java.net.SocketAddress;
 import java.util.HashMap;
 import java.util.LinkedHashSet;

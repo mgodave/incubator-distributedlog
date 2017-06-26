@@ -19,17 +19,17 @@ package org.apache.distributedlog.client.serverset;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.net.HostAndPort;
-import com.twitter.common.quantity.Amount;
-import com.twitter.common.quantity.Time;
-import com.twitter.common.zookeeper.ServerSet;
-import com.twitter.common.zookeeper.ServerSets;
-import com.twitter.common.zookeeper.ZooKeeperClient;
-import java.net.InetSocketAddress;
-import java.net.URI;
+import com.twitter.finagle.common.zookeeper.ServerSet;
+import com.twitter.finagle.common.zookeeper.ServerSetImpl;
+import com.twitter.finagle.common.zookeeper.ZooKeeperClient;
+import com.twitter.util.Duration;
 import org.apache.commons.lang.StringUtils;
 import org.apache.zookeeper.ZooDefs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.InetSocketAddress;
+import java.net.URI;
 
 /**
  * A wrapper over zookeeper client and its server set.
@@ -63,8 +63,8 @@ public class DLZkServerSet {
         String zkPath = uri.getPath() + "/" + ZNODE_WRITE_PROXY;
         Iterable<InetSocketAddress> zkAddresses = getZkAddresses(uri);
         ZooKeeperClient zkClient =
-                new ZooKeeperClient(Amount.of(zkSessionTimeoutMs, Time.MILLISECONDS), zkAddresses);
-        ServerSet serverSet = ServerSets.create(zkClient, ZooDefs.Ids.OPEN_ACL_UNSAFE, zkPath);
+                new ZooKeeperClient(Duration.fromMilliseconds(zkSessionTimeoutMs), zkAddresses);
+        ServerSet serverSet = new ServerSetImpl(zkClient, ZooDefs.Ids.OPEN_ACL_UNSAFE, zkPath);
         return new DLZkServerSet(zkClient, serverSet);
     }
 

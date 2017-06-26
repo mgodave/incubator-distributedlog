@@ -17,29 +17,30 @@
  */
 package org.apache.distributedlog.service.balancer;
 
-import static com.google.common.base.Charsets.UTF_8;
-import static org.junit.Assert.fail;
-
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.RateLimiter;
+import com.twitter.util.Await;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.distributedlog.client.monitor.MonitorServiceClient;
 import org.apache.distributedlog.service.DLSocketAddress;
 import org.apache.distributedlog.service.DistributedLogClient;
 import org.apache.distributedlog.service.DistributedLogCluster.DLServer;
 import org.apache.distributedlog.service.DistributedLogServerTestCase;
-import com.twitter.util.Await;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static com.google.common.base.Charsets.UTF_8;
+import static org.junit.Assert.fail;
 
 /**
  * Test Case for {@link ClusterBalancer}.

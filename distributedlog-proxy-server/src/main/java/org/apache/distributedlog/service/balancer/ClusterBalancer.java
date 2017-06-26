@@ -19,28 +19,23 @@ package org.apache.distributedlog.service.balancer;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.RateLimiter;
+import com.twitter.util.Await;
+import com.twitter.util.Function;
+import com.twitter.util.Future;
+import com.twitter.util.FutureEventListener;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.distributedlog.client.monitor.MonitorServiceClient;
 import org.apache.distributedlog.service.ClientUtils;
 import org.apache.distributedlog.service.DLSocketAddress;
 import org.apache.distributedlog.service.DistributedLogClient;
 import org.apache.distributedlog.service.DistributedLogClientBuilder;
-import com.twitter.util.Await;
-import com.twitter.util.Function;
-import com.twitter.util.Future;
-import com.twitter.util.FutureEventListener;
-import java.io.Serializable;
-import java.net.SocketAddress;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.net.SocketAddress;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A balancer balances ownerships with a cluster of targets.

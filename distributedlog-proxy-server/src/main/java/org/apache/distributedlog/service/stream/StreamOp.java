@@ -18,11 +18,11 @@
 package org.apache.distributedlog.service.stream;
 
 import com.google.common.base.Stopwatch;
+import com.twitter.util.Future;
 import org.apache.distributedlog.api.AsyncLogWriter;
+import org.apache.distributedlog.common.util.Sequencer;
 import org.apache.distributedlog.exceptions.DLException;
 import org.apache.distributedlog.thrift.service.ResponseHeader;
-import org.apache.distributedlog.common.util.Sequencer;
-import com.twitter.util.Future;
 
 /**
  * An operation applied to a stream.

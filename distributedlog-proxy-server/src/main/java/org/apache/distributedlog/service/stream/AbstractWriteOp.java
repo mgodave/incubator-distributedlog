@@ -17,13 +17,13 @@
  */
 package org.apache.distributedlog.service.stream;
 
+import com.twitter.util.Future;
+import org.apache.bookkeeper.feature.Feature;
+import org.apache.bookkeeper.stats.OpStatsLogger;
 import org.apache.distributedlog.protocol.util.ProtocolUtils;
 import org.apache.distributedlog.service.ResponseUtils;
 import org.apache.distributedlog.thrift.service.ResponseHeader;
 import org.apache.distributedlog.thrift.service.WriteResponse;
-import com.twitter.util.Future;
-import org.apache.bookkeeper.feature.Feature;
-import org.apache.bookkeeper.stats.OpStatsLogger;
 import scala.runtime.AbstractFunction1;
 
 /**

@@ -17,11 +17,11 @@
  */
 package org.apache.distributedlog.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
+import com.twitter.finagle.builder.ClientBuilder;
+import com.twitter.finagle.thrift.ClientId$;
+import com.twitter.util.Duration;
 import org.apache.distributedlog.DLMTestUtil;
 import org.apache.distributedlog.DistributedLogConfiguration;
 import org.apache.distributedlog.client.DistributedLogClientImpl;
@@ -31,18 +31,19 @@ import org.apache.distributedlog.client.routing.RegionsRoutingService;
 import org.apache.distributedlog.service.DistributedLogCluster.DLServer;
 import org.apache.distributedlog.service.stream.StreamManager;
 import org.apache.distributedlog.service.stream.StreamManagerImpl;
-import com.twitter.finagle.builder.ClientBuilder;
-import com.twitter.finagle.thrift.ClientId$;
-import com.twitter.util.Duration;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+
 import java.net.SocketAddress;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Base test case for distributedlog servers.
@@ -78,7 +79,7 @@ public abstract class DistributedLogServerTestCase {
                         .handshakeWithClientInfo(true)
                         .clientBuilder(ClientBuilder.get()
                             .hostConnectionLimit(1)
-                            .connectionTimeout(Duration.fromSeconds(1))
+                            .tcpConnectTimeout(Duration.fromSeconds(1))
                             .requestTimeout(Duration.fromSeconds(60)));
             if (serverSideRoutingFinagleName.isPresent()) {
                 dlClientBuilder =
@@ -121,7 +122,7 @@ public abstract class DistributedLogServerTestCase {
                         .maxRedirects(2)
                         .clientBuilder(ClientBuilder.get()
                             .hostConnectionLimit(1)
-                            .connectionTimeout(Duration.fromSeconds(1))
+                            .tcpConnectTimeout(Duration.fromSeconds(1))
                             .requestTimeout(Duration.fromSeconds(10)));
             dlClient = (DistributedLogClientImpl) dlClientBuilder.build();
         }

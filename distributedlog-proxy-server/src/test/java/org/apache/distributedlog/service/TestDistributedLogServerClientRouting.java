@@ -17,13 +17,14 @@
  */
 package org.apache.distributedlog.service;
 
-import static com.google.common.base.Charsets.UTF_8;
-import static org.junit.Assert.fail;
-
 import com.twitter.finagle.NoBrokersAvailableException;
 import com.twitter.util.Await;
-import java.nio.ByteBuffer;
 import org.junit.Test;
+
+import java.nio.ByteBuffer;
+
+import static com.google.common.base.Charsets.UTF_8;
+import static org.junit.Assert.fail;
 
 /**
  * Test the server with client side routing.

@@ -17,20 +17,17 @@
  */
 package org.apache.distributedlog.service.balancer;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import com.google.common.collect.Sets;
+import org.junit.Test;
+
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * Test Case for {@link CountBasedStreamChooser}.

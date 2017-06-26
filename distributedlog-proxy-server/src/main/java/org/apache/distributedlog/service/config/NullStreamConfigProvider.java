@@ -18,9 +18,7 @@
 package org.apache.distributedlog.service.config;
 
 import com.google.common.base.Optional;
-
 import org.apache.distributedlog.config.DynamicDistributedLogConfiguration;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

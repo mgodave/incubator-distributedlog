@@ -17,26 +17,22 @@
  */
 package org.apache.distributedlog.service.stream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
+import com.twitter.util.Await;
 import org.apache.distributedlog.DistributedLogConfiguration;
 import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.config.DynamicDistributedLogConfiguration;
 import org.apache.distributedlog.service.config.StreamConfigProvider;
 import org.apache.distributedlog.service.streamset.Partition;
 import org.apache.distributedlog.service.streamset.StreamPartitionConverter;
-import com.twitter.util.Await;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
+
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 /**
  * Test Case for StreamManager.
@@ -129,7 +125,7 @@ public class TestStreamManager {
                 mockStreamConfigProvider,
                 dlNamespace);
 
-        assertTrue(Await.ready(streamManager.createStreamAsync(streamName)).isReturn());
+        assertTrue(Await.result(streamManager.createStreamAsync(streamName).liftToTry()).isReturn());
         verify(dlNamespace).createLog(streamName);
     }
 }

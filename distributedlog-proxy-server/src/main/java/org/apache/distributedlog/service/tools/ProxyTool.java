@@ -18,6 +18,14 @@
 package org.apache.distributedlog.service.tools;
 
 import com.google.common.util.concurrent.RateLimiter;
+import com.twitter.finagle.builder.ClientBuilder;
+import com.twitter.finagle.thrift.ClientId$;
+import com.twitter.util.Await;
+import com.twitter.util.Duration;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.client.monitor.MonitorServiceClient;
 import org.apache.distributedlog.client.serverset.DLZkServerSet;
@@ -26,20 +34,13 @@ import org.apache.distributedlog.service.DLSocketAddress;
 import org.apache.distributedlog.service.DistributedLogClient;
 import org.apache.distributedlog.service.DistributedLogClientBuilder;
 import org.apache.distributedlog.tools.Tool;
-import com.twitter.finagle.builder.ClientBuilder;
-import com.twitter.finagle.thrift.ClientId$;
-import com.twitter.util.Await;
-import com.twitter.util.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import org.apache.commons.lang3.tuple.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Tools to interact with proxies.
@@ -84,7 +85,6 @@ public class ProxyTool extends Tool {
                         .maxRedirects(2)
                         .serverSet(serverSet.getServerSet())
                         .clientBuilder(ClientBuilder.get()
-                            .connectionTimeout(Duration.fromSeconds(2))
                             .tcpConnectTimeout(Duration.fromSeconds(2))
                             .requestTimeout(Duration.fromSeconds(10))
                             .hostConnectionLimit(1)
@@ -283,7 +283,6 @@ public class ProxyTool extends Tool {
                     .maxRedirects(2)
                     .host(address)
                     .clientBuilder(ClientBuilder.get()
-                            .connectionTimeout(Duration.fromSeconds(2))
                             .tcpConnectTimeout(Duration.fromSeconds(2))
                             .requestTimeout(Duration.fromSeconds(10))
                             .hostConnectionLimit(1)

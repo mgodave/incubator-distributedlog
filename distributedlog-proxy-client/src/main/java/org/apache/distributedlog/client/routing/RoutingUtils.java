@@ -17,7 +17,8 @@
  */
 package org.apache.distributedlog.client.routing;
 
-import com.twitter.common.zookeeper.ServerSet;
+import com.twitter.finagle.common.zookeeper.ServerSet;
+
 import java.net.SocketAddress;
 
 /**

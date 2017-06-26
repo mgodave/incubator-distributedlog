@@ -17,15 +17,15 @@
  */
 package org.apache.distributedlog.service.stream.admin;
 
-import static org.apache.distributedlog.service.stream.AbstractStreamOp.requestStat;
-
-import org.apache.distributedlog.service.ResponseUtils;
-import org.apache.distributedlog.service.stream.StreamManager;
-import org.apache.distributedlog.thrift.service.WriteResponse;
 import com.twitter.util.Future;
 import org.apache.bookkeeper.feature.Feature;
 import org.apache.bookkeeper.stats.StatsLogger;
+import org.apache.distributedlog.service.ResponseUtils;
+import org.apache.distributedlog.service.stream.StreamManager;
+import org.apache.distributedlog.thrift.service.WriteResponse;
 import scala.runtime.AbstractFunction1;
+
+import static org.apache.distributedlog.service.stream.AbstractStreamOp.requestStat;
 
 /**
  * Operation to create log stream.

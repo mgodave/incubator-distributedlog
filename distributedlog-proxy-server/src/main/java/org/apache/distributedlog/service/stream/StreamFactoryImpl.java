@@ -17,6 +17,8 @@
  */
 package org.apache.distributedlog.service.stream;
 
+import com.twitter.util.Timer;
+import org.apache.bookkeeper.feature.FeatureProvider;
 import org.apache.distributedlog.DistributedLogConfiguration;
 import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.config.DynamicDistributedLogConfiguration;
@@ -25,8 +27,6 @@ import org.apache.distributedlog.service.config.ServerConfiguration;
 import org.apache.distributedlog.service.config.StreamConfigProvider;
 import org.apache.distributedlog.service.streamset.StreamPartitionConverter;
 import org.apache.distributedlog.util.OrderedScheduler;
-import com.twitter.util.Timer;
-import org.apache.bookkeeper.feature.FeatureProvider;
 import org.jboss.netty.util.HashedWheelTimer;
 
 /**

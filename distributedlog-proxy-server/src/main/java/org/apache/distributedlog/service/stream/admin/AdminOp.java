@@ -17,8 +17,8 @@
  */
 package org.apache.distributedlog.service.stream.admin;
 
-import org.apache.distributedlog.exceptions.DLException;
 import com.twitter.util.Future;
+import org.apache.distributedlog.exceptions.DLException;
 
 /**
  * Admin operation interface.

@@ -17,10 +17,11 @@
  */
 package org.apache.distributedlog.service.utils;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 import java.net.InetAddress;
-import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test Case for {@link ServerUtils}.

@@ -18,7 +18,7 @@
 package org.apache.distributedlog.client.routing;
 
 import com.google.common.collect.ImmutableSet;
-import com.twitter.common.net.pool.DynamicHostSet;
+import com.twitter.finagle.common.net.pool.DynamicHostSet;
 import com.twitter.thrift.Endpoint;
 import com.twitter.thrift.ServiceInstance;
 import java.net.InetSocketAddress;

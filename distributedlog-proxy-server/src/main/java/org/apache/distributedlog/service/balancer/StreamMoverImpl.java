@@ -17,12 +17,12 @@
  */
 package org.apache.distributedlog.service.balancer;
 
-import org.apache.distributedlog.client.monitor.MonitorServiceClient;
-import org.apache.distributedlog.service.DistributedLogClient;
 import com.twitter.util.Await;
 import com.twitter.util.Function;
 import com.twitter.util.Future;
 import com.twitter.util.FutureEventListener;
+import org.apache.distributedlog.client.monitor.MonitorServiceClient;
+import org.apache.distributedlog.service.DistributedLogClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

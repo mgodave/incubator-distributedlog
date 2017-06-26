@@ -19,20 +19,21 @@ package org.apache.distributedlog.service.config;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.distributedlog.DistributedLogConfiguration;
 import org.apache.distributedlog.common.config.ConcurrentConstConfiguration;
 import org.apache.distributedlog.common.config.ConfigurationSubscription;
-import org.apache.distributedlog.config.DynamicDistributedLogConfiguration;
 import org.apache.distributedlog.common.config.FileConfigurationBuilder;
 import org.apache.distributedlog.common.config.PropertiesConfigurationBuilder;
+import org.apache.distributedlog.config.DynamicDistributedLogConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import org.apache.commons.configuration.ConfigurationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * For all streams return the same dynamic config based on configFile.

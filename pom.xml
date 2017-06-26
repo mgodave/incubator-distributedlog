@@ -104,7 +104,7 @@
     <commons-lang.version>2.6</commons-lang.version>
     <commons-lang3.version>3.3.2</commons-lang3.version>
     <curator.version>3.2.1</curator.version>
-    <finagle.version>6.34.0</finagle.version>
+    <finagle.version>6.45.0</finagle.version>
     <freebuilder.version>1.12.3</freebuilder.version>
     <guava.version>20.0</guava.version>
     <jetty.version>8.1.19.v20160209</jetty.version>

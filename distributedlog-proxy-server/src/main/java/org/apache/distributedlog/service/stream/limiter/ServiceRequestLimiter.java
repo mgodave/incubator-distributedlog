@@ -17,16 +17,16 @@
  */
 package org.apache.distributedlog.service.stream.limiter;
 
+import org.apache.bookkeeper.feature.Feature;
+import org.apache.bookkeeper.stats.StatsLogger;
+import org.apache.distributedlog.common.rate.MovingAverageRate;
 import org.apache.distributedlog.config.DynamicDistributedLogConfiguration;
 import org.apache.distributedlog.exceptions.OverCapacityException;
 import org.apache.distributedlog.limiter.ChainedRequestLimiter;
 import org.apache.distributedlog.limiter.ComposableRequestLimiter.OverlimitFunction;
 import org.apache.distributedlog.limiter.RequestLimiter;
-import org.apache.distributedlog.common.rate.MovingAverageRate;
 import org.apache.distributedlog.service.stream.StreamManager;
 import org.apache.distributedlog.service.stream.StreamOp;
-import org.apache.bookkeeper.feature.Feature;
-import org.apache.bookkeeper.stats.StatsLogger;
 
 /**
  * Request limiter for the service instance (global request limiter).

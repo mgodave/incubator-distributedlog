@@ -17,9 +17,9 @@
  */
 package org.apache.distributedlog.service.streamset;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test Cases for {@link DelimiterStreamPartitionConverter}.

@@ -17,15 +17,16 @@
  */
 package org.apache.distributedlog.service.placement;
 
-import static com.google.common.base.Charsets.UTF_8;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TJSONProtocol;
 import org.apache.thrift.transport.TMemoryBuffer;
 import org.apache.thrift.transport.TMemoryInputTransport;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
+import static com.google.common.base.Charsets.UTF_8;
 
 /**
  * An object represent the load of a stream.

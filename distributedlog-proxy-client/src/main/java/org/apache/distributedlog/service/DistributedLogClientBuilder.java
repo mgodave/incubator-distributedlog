@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
-import com.twitter.common.zookeeper.ServerSet;
+import com.twitter.finagle.common.zookeeper.ServerSet;
 import org.apache.distributedlog.client.ClientConfig;
 import org.apache.distributedlog.client.DistributedLogClientImpl;
 import org.apache.distributedlog.client.monitor.MonitorServiceClient;

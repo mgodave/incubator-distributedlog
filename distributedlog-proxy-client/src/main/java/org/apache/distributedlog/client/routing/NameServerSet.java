@@ -18,10 +18,10 @@
 package org.apache.distributedlog.client.routing;
 
 import com.google.common.collect.ImmutableSet;
-import com.twitter.common.base.Command;
-import com.twitter.common.base.Commands;
-import com.twitter.common.zookeeper.Group;
-import com.twitter.common.zookeeper.ServerSet;
+
+import com.google.common.util.concurrent.Runnables;
+import com.twitter.finagle.common.zookeeper.Group;
+import com.twitter.finagle.common.zookeeper.ServerSet;
 import com.twitter.finagle.Addr;
 import com.twitter.finagle.Address;
 import com.twitter.finagle.Name;
@@ -247,7 +247,7 @@ class NameServerSet implements ServerSet {
      * @throws com.twitter.common.net.pool.DynamicHostSet.MonitorException if there is a problem monitoring the host set
      */
     @Override
-    public Command watch(HostChangeMonitor<ServiceInstance> monitor) throws MonitorException {
+    public Runnable watch(HostChangeMonitor<ServiceInstance> monitor) throws MonitorException {
         // First add the monitor to the watchers so that it does not miss any changes and invoke
         // the onChange method
         synchronized (watchers) {
@@ -258,6 +258,8 @@ class NameServerSet implements ServerSet {
             monitor.onChange(hostSet);
         }
 
-        return Commands.NOOP; // Return value is not used
+        return Runnables.doNothing();
     }
+
+
 }

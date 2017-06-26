@@ -17,24 +17,19 @@
  */
 package org.apache.distributedlog.service.placement;
 
-import org.apache.distributedlog.client.routing.RoutingService;
-import org.apache.distributedlog.api.namespace.Namespace;
 import com.twitter.util.Duration;
 import com.twitter.util.Function;
 import com.twitter.util.Future;
 import com.twitter.util.Futures;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 import org.apache.bookkeeper.stats.Gauge;
 import org.apache.bookkeeper.stats.StatsLogger;
+import org.apache.distributedlog.api.namespace.Namespace;
+import org.apache.distributedlog.client.routing.RoutingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.runtime.BoxedUnit;
+
+import java.util.*;
 
 /**
  * Least Load Placement Policy.

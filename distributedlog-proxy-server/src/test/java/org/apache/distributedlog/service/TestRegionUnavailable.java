@@ -17,22 +17,24 @@
  */
 package org.apache.distributedlog.service;
 
+import com.twitter.util.Await;
+import org.apache.bookkeeper.feature.Feature;
+import org.apache.bookkeeper.feature.FeatureProvider;
+import org.apache.bookkeeper.feature.SettableFeature;
+import org.apache.bookkeeper.stats.StatsLogger;
 import org.apache.distributedlog.DistributedLogConfiguration;
 import org.apache.distributedlog.feature.DefaultFeatureProvider;
 import org.apache.distributedlog.service.DistributedLogCluster.DLServer;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.bookkeeper.feature.Feature;
-import org.apache.bookkeeper.feature.FeatureProvider;
-import org.apache.bookkeeper.feature.SettableFeature;
-import org.apache.bookkeeper.stats.StatsLogger;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 
 /**
  * Test Case for {@link org.apache.distributedlog.exceptions.RegionUnavailableException}.
@@ -129,7 +131,7 @@ public class TestRegionUnavailable extends DistributedLogServerTestCase {
         registerStream(name);
 
         for (long i = 1; i <= 10; i++) {
-            client.dlClient.write(name, ByteBuffer.wrap(("" + i).getBytes())).get();
+            Await.result(client.dlClient.write(name, ByteBuffer.wrap(("" + i).getBytes())).liftToTry());
         }
 
         // check local region

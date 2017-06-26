@@ -17,17 +17,17 @@
  */
 package org.apache.distributedlog.service.stream;
 
-import static org.apache.distributedlog.protocol.util.TwitterFutureUtils.newTFutureList;
-
-import org.apache.distributedlog.api.AsyncLogWriter;
+import com.twitter.util.*;
+import org.apache.bookkeeper.feature.Feature;
+import org.apache.bookkeeper.stats.Counter;
+import org.apache.bookkeeper.stats.OpStatsLogger;
+import org.apache.bookkeeper.stats.StatsLogger;
 import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.LogRecord;
 import org.apache.distributedlog.acl.AccessControlManager;
-import org.apache.distributedlog.exceptions.AlreadyClosedException;
-import org.apache.distributedlog.exceptions.DLException;
-import org.apache.distributedlog.exceptions.LockingException;
-import org.apache.distributedlog.exceptions.OwnershipAcquireFailedException;
-import org.apache.distributedlog.exceptions.RequestDeniedException;
+import org.apache.distributedlog.api.AsyncLogWriter;
+import org.apache.distributedlog.common.util.Sequencer;
+import org.apache.distributedlog.exceptions.*;
 import org.apache.distributedlog.service.ResponseUtils;
 import org.apache.distributedlog.service.streamset.Partition;
 import org.apache.distributedlog.service.streamset.StreamPartitionConverter;
@@ -35,22 +35,15 @@ import org.apache.distributedlog.thrift.service.BulkWriteResponse;
 import org.apache.distributedlog.thrift.service.ResponseHeader;
 import org.apache.distributedlog.thrift.service.StatusCode;
 import org.apache.distributedlog.thrift.service.WriteResponse;
-import org.apache.distributedlog.common.util.Sequencer;
-import com.twitter.util.ConstFuture;
-import com.twitter.util.Future;
-import com.twitter.util.Future$;
-import com.twitter.util.FutureEventListener;
-import com.twitter.util.Try;
+import scala.runtime.AbstractFunction1;
+
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import org.apache.bookkeeper.feature.Feature;
-import org.apache.bookkeeper.stats.Counter;
-import org.apache.bookkeeper.stats.OpStatsLogger;
-import org.apache.bookkeeper.stats.StatsLogger;
-import scala.runtime.AbstractFunction1;
+
+import static org.apache.distributedlog.protocol.util.TwitterFutureUtils.newTFutureList;
 
 /**
  * Bulk Write Operation.

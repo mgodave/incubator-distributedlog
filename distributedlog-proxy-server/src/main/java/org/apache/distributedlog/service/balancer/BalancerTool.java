@@ -17,11 +17,17 @@
  */
 package org.apache.distributedlog.service.balancer;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.RateLimiter;
-import com.twitter.common.zookeeper.ServerSet;
+import com.twitter.finagle.builder.ClientBuilder;
+import com.twitter.finagle.common.zookeeper.ServerSet;
+import com.twitter.finagle.thrift.ClientId$;
+import com.twitter.util.Await;
+import com.twitter.util.Duration;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.distributedlog.client.monitor.MonitorServiceClient;
 import org.apache.distributedlog.client.serverset.DLZkServerSet;
 import org.apache.distributedlog.impl.BKNamespaceDriver;
@@ -30,18 +36,13 @@ import org.apache.distributedlog.service.DLSocketAddress;
 import org.apache.distributedlog.service.DistributedLogClient;
 import org.apache.distributedlog.service.DistributedLogClientBuilder;
 import org.apache.distributedlog.tools.Tool;
-import com.twitter.finagle.builder.ClientBuilder;
-import com.twitter.finagle.thrift.ClientId$;
-import com.twitter.util.Await;
-import com.twitter.util.Duration;
-import java.net.InetSocketAddress;
-import java.net.URI;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.InetSocketAddress;
+import java.net.URI;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Tool to rebalance cluster.
@@ -57,7 +58,6 @@ public class BalancerTool extends Tool {
                         .maxRedirects(2)
                         .serverSet(serverSet)
                         .clientBuilder(ClientBuilder.get()
-                                .connectionTimeout(Duration.fromSeconds(2))
                                 .tcpConnectTimeout(Duration.fromSeconds(2))
                                 .requestTimeout(Duration.fromSeconds(10))
                                 .hostConnectionLimit(1)

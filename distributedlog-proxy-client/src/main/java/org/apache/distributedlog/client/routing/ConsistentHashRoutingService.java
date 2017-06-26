@@ -27,7 +27,7 @@ import com.google.common.collect.Maps;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.twitter.common.zookeeper.ServerSet;
+import com.twitter.finagle.common.zookeeper.ServerSet;
 import org.apache.distributedlog.service.DLSocketAddress;
 import com.twitter.finagle.ChannelException;
 import com.twitter.finagle.NoBrokersAvailableException;

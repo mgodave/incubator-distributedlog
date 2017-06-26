@@ -17,24 +17,21 @@
  */
 package org.apache.distributedlog.service.stream.limiter;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
+import org.apache.bookkeeper.feature.SettableFeature;
+import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.distributedlog.DistributedLogConfiguration;
 import org.apache.distributedlog.common.config.ConcurrentConstConfiguration;
 import org.apache.distributedlog.config.DynamicDistributedLogConfiguration;
 import org.apache.distributedlog.exceptions.OverCapacityException;
-import org.apache.distributedlog.limiter.ChainedRequestLimiter;
-import org.apache.distributedlog.limiter.ComposableRequestLimiter;
+import org.apache.distributedlog.limiter.*;
 import org.apache.distributedlog.limiter.ComposableRequestLimiter.CostFunction;
 import org.apache.distributedlog.limiter.ComposableRequestLimiter.OverlimitFunction;
-import org.apache.distributedlog.limiter.GuavaRateLimiter;
-import org.apache.distributedlog.limiter.RateLimiter;
-import org.apache.distributedlog.limiter.RequestLimiter;
-import java.util.concurrent.atomic.AtomicInteger;
-import org.apache.bookkeeper.feature.SettableFeature;
-import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.junit.Test;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * Test Case for {@link ServiceRequestLimiter}.

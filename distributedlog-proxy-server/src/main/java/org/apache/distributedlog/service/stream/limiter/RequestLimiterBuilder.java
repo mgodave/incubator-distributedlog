@@ -17,8 +17,8 @@
  */
 package org.apache.distributedlog.service.stream.limiter;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
+import org.apache.bookkeeper.stats.NullStatsLogger;
+import org.apache.bookkeeper.stats.StatsLogger;
 import org.apache.distributedlog.exceptions.OverCapacityException;
 import org.apache.distributedlog.limiter.ComposableRequestLimiter;
 import org.apache.distributedlog.limiter.ComposableRequestLimiter.CostFunction;
@@ -28,8 +28,8 @@ import org.apache.distributedlog.limiter.RateLimiter;
 import org.apache.distributedlog.limiter.RequestLimiter;
 import org.apache.distributedlog.service.stream.StreamOp;
 import org.apache.distributedlog.service.stream.WriteOpWithPayload;
-import org.apache.bookkeeper.stats.NullStatsLogger;
-import org.apache.bookkeeper.stats.StatsLogger;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Request limiter builder.
